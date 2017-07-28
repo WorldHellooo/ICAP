@@ -6,10 +6,12 @@ from PIL import Image, ImageTk
 from tkFileDialog import *
 import json
 
+# the path of images and json file to load, and where to save the json file with chinese annotation
 picdir = ''
 jsondir= ''
 json_save_name = 'captions_with_chn.json'
-#json_save = open(json_save_name, 'w')
+
+# The interface to load the path of images and json file
 class Selectpath():
     def __init__(self, root):
         self.topframe = Frame(root, borderwidth=2, relief=GROOVE)
@@ -42,6 +44,8 @@ class Selectpath():
         self.cancel = Button(self.topframe, text='Cancel', command=root.quit)
         self.cancel.grid(row=2, column=2, padx=4, pady=4)
     
+    # get the path of images through the Load button
+    # and put it into the Image Path entry
     def getpicdir(self):
         global picdir
         picdir = askdirectory()
@@ -49,6 +53,8 @@ class Selectpath():
             self.picdir_text.set(picdir)
             self.picentry['textvariable'] = self.picdir_text
 
+    # get the path of json file through the Load button
+    # and put it into the JSON Path entry
     def getjsondir(self):
         global jsondir
         ftypes = (('JSON Files', '*.json'),
@@ -58,6 +64,8 @@ class Selectpath():
             self.jsondir_text.set(jsondir)
             self.jsonentry['textvariable'] = self.jsondir_text
     
+    # get picdir and jsondir
+    # if not exists, then pop-up a warning window
     def getdirs(self):
         global picdir, jsondir
         picdir = self.picentry.get()
@@ -69,11 +77,13 @@ class Selectpath():
             Label(win, text="Path or file not exist!").pack()
 
 
-
+# The interface to annotate the images with Chinese sentences.
 class Anno():
     def __init__(self, root):
         global picdir, jsondir
         self.anno = Toplevel(root)
+        
+        # left frame: the list of images
         self.leftframe = Frame(self.anno, borderwidth=2, relief=GROOVE)
 	self.leftframe.grid(row=0, column=0, rowspan=3, padx=2, pady=2)
         self.leftscrbar = Scrollbar(self.leftframe, orient=VERTICAL)
@@ -84,12 +94,15 @@ class Anno():
         self.getpiclist()
         for pic in self.pl:
             self.listbox.insert(END, pic)
+
+        # if there has been a file named json_save_name, load it
+        # else load the jsondir
         if os.path.exists(json_save_name):
             self.jl = json.load(open(json_save_name, 'r'))
         else:
             self.jl = json.load(open(jsondir, 'r'))
             for i, it in enumerate(self.jl):
-                self.jl[i]['chn'] = [' ',' ',' ',' ',' ']
+                self.jl[i]['chn'] = ['','','','','']
             
 
         self.cur_imgname = ''
@@ -98,14 +111,14 @@ class Anno():
 
         self.leftscrbar.config(command=self.listbox.yview)
 
-
+        # middle frame: current image
 	self.midframe = Frame(self.anno, borderwidth=2, relief=GROOVE)
 	self.midframe.grid(row=0, column=1, rowspan=3, padx=2, pady=2)
         self.img = ImageTk.PhotoImage(file=picdir+os.path.sep+self.pl[0])
         self.imglabel = Label(self.midframe, image=self.img)
         self.imglabel.pack(side=LEFT, fill=BOTH)
 	
-
+        # top right: EN annotations loading from json file
 	self.rightframe1 = Frame(self.anno, borderwidth=2, relief=GROOVE)
 	self.rightframe1.grid(row=0, column=2, padx=2, pady=2)
         self.origin_anno = ['1. Please hit ENTER.              ', '2. Please hit ENTER.              ', '3. Please hit ENTER.              ', '4. Please hit ENTER.              ', '5. Please hit ENTER.              ']
@@ -121,48 +134,56 @@ class Anno():
         self.origin_label5 = Label(self.rightframe1, text=self.origin_anno[4], wraplength=500, justify=LEFT)
         self.origin_label5.pack(side=TOP, anchor=W, padx=10, pady=8)
         
-
+        # middle right: entries to type Chinese sentences into
 	self.rightframe2 = Frame(self.anno, borderwidth=2, relief=GROOVE)
 	self.rightframe2.grid(row=1, column=2, padx=2, pady=2)
-        self.chn_anno = [' ',' ',' ',' ',' ']
-        self.chn_anno
-
+        
+        self.chn_anno1 = StringVar()
+        self.chn_anno2 = StringVar()
+        self.chn_anno3 = StringVar()
+        self.chn_anno4 = StringVar()
+        self.chn_anno5 = StringVar()
+        
         self.chn_label1 = Label(self.rightframe2, text='1. ')
         self.chn_label1.grid(row=0, column=0, padx=10, pady=5)
 	self.chn_entry1 = Entry(self.rightframe2, width=50)
 	self.chn_entry1.grid(row=0, column=1, columnspan=4, padx=5, pady=5)
-	self.chn_button1 = Button(self.rightframe2, text='Save', command=self.save_chn1)
-	self.chn_button1.grid(row=0, column=5, padx=5, pady=5)
+#	self.chn_button1 = Button(self.rightframe2, text='Save', command=self.save_chn1)
+#	self.chn_button1.grid(row=0, column=5, padx=5, pady=5)
 
         self.chn_label2 = Label(self.rightframe2, text='2. ')
         self.chn_label2.grid(row=1, column=0, padx=10, pady=5)
 	self.chn_entry2 = Entry(self.rightframe2, width=50)
 	self.chn_entry2.grid(row=1, column=1, columnspan=4, padx=5, pady=5)
-	self.chn_button2 = Button(self.rightframe2, text='Save', command=self.save_chn2)
-	self.chn_button2.grid(row=1, column=5, padx=5, pady=5)
+#	self.chn_button2 = Button(self.rightframe2, text='Save', command=self.save_chn2)
+#	self.chn_button2.grid(row=1, column=5, padx=5, pady=5)
 
         self.chn_label3 = Label(self.rightframe2, text='3. ')
 	self.chn_label3.grid(row=2, column=0, padx=10, pady=5)
 	self.chn_entry3 = Entry(self.rightframe2, width=50)
 	self.chn_entry3.grid(row=2, column=1, columnspan=4, padx=5, pady=5)
-	self.chn_button3 = Button(self.rightframe2, text='Save', command=self.save_chn3)
-	self.chn_button3.grid(row=2, column=5, padx=5, pady=5)
+#	self.chn_button3 = Button(self.rightframe2, text='Save', command=self.save_chn3)
+#	self.chn_button3.grid(row=2, column=5, padx=5, pady=5)
 
         self.chn_label4 = Label(self.rightframe2, text='4. ')
 	self.chn_label4.grid(row=3, column=0, padx=10, pady=5)        
 	self.chn_entry4 = Entry(self.rightframe2, width=50)
-	self.chn_entry4.grid(row=3, column=1, columnspan=4, padx=5, pady=5)
-	self.chn_button4 = Button(self.rightframe2, text='Save', command=self.save_chn4)
-	self.chn_button4.grid(row=3, column=5, padx=5, pady=5)
+        self.chn_entry4.grid(row=3, column=1, columnspan=4, padx=5, pady=5)
+#	self.chn_button4 = Button(self.rightframe2, text='Save', command=self.save_chn4)
+#	self.chn_button4.grid(row=3, column=5, padx=5, pady=5)
 
 	self.chn_label5 = Label(self.rightframe2, text='5. ')
 	self.chn_label5.grid(row=4, column=0, padx=10, pady=5)
 	self.chn_entry5 = Entry(self.rightframe2, width=50)
 	self.chn_entry5.grid(row=4, column=1, columnspan=4, padx=5, pady=5)
-	self.chn_button5 = Button(self.rightframe2, text='Save', command=self.save_chn5)
-	self.chn_button5.grid(row=4, column=5, padx=5, pady=5)
-        
+#	self.chn_button5 = Button(self.rightframe2, text='Save', command=self.save_chn5)
+#	self.chn_button5.grid(row=4, column=5, padx=5, pady=5)
 
+        self.chn_save_button = Button(self.rightframe2, text='Save', command=self.chn_save, width=8, height=2)
+        self.chn_save_button.grid(row=5, column=0,columnspan=5, padx=5, pady=5)
+
+        
+        # buttom right: buttons of Last and Next
         self.rightframe3 = Frame(self.anno, borderwidth=2, relief=GROOVE)
         self.rightframe3.grid(row=2, column=2, padx=2, pady=2)
         self.lastbutton = Button(self.rightframe3, text='Last', command=self.last_img, width =10, height=3)
@@ -172,6 +193,7 @@ class Anno():
 
         self.listbox.bind('<Return>', self.show_img_and_text)
 
+    # load piclist from picdir
     def getpiclist(self):
         global picdir
         ls = os.listdir(picdir)
@@ -179,7 +201,8 @@ class Anno():
             if os.path.splitext(f)[1] == '.jpg':
                 self.pl.append(f)
         #self.pl.sort(key=lambda x:int(x[:-4]))
-
+    
+    # 
     def show_img_and_text(self, event):
         global picdir, jsondir
         self.cur_imgname = event.widget.get(ACTIVE)
@@ -197,6 +220,11 @@ class Anno():
                 self.origin_anno[2] = '3. ' + it['captions'][2]
                 self.origin_anno[3] = '4. ' + it['captions'][3]
                 self.origin_anno[4] = '5. ' + it['captions'][4]
+                self.chn_anno1.set(it['chn'][0])
+                self.chn_anno2.set(it['chn'][1])
+                self.chn_anno3.set(it['chn'][2])
+                self.chn_anno4.set(it['chn'][3])
+                self.chn_anno5.set(it['chn'][4])
                 self.cur_jl_index = index
                 break
         self.origin_label1['text'] = self.origin_anno[0]
@@ -205,57 +233,30 @@ class Anno():
         self.origin_label4['text'] = self.origin_anno[3]
         self.origin_label5['text'] = self.origin_anno[4]
         
-        self.chn_entry1.delete(0, END)
-        self.chn_entry2.delete(0, END)
-        self.chn_entry3.delete(0, END)
-        self.chn_entry4.delete(0, END)
-        self.chn_entry5.delete(0, END)
+        self.chn_entry1['textvariable'] = self.chn_anno1
+        self.chn_entry2['textvariable'] = self.chn_anno2
+        self.chn_entry3['textvariable'] = self.chn_anno3
+        self.chn_entry4['textvariable'] = self.chn_anno4
+        self.chn_entry5['textvariable'] = self.chn_anno5
 
-    def save_chn1(self):
-        global json_save_name
-        self.chn_anno[0] = self.chn_entry1.get()
-	if self.cur_jl_index >= 0:
-            self.jl[self.cur_jl_index]['chn'][0] = self.chn_anno[0]
-            json_save = open(json_save_name, 'w')
-            json_save.write(json.dumps(self.jl))
-            json_save.close()
-
-    def save_chn2(self):
-        global json_save_name
-        self.chn_anno[1] = self.chn_entry2.get()
-        if self.cur_jl_index >= 0:
-            self.jl[self.cur_jl_index]['chn'][1] = self.chn_anno[1]
-            json_save = open(json_save_name, 'w')
-            json_save.write(json.dumps(self.jl))
-            json_save.close()
-
-    def save_chn3(self):
-        global json_save_name
-        self.chn_anno[2] = self.chn_entry3.get()
-        if self.cur_jl_index >= 0:
-            self.jl[self.cur_jl_index]['chn'][2] = self.chn_anno[2]
-            json_save = open(json_save_name, 'w')
-            json_save.write(json.dumps(self.jl))
-            json_save.close()
-
-    def save_chn4(self):
-        global json_save_name
-        self.chn_anno[3] = self.chn_entry4.get()
-        if self.cur_jl_index >= 0:
-            self.jl[self.cur_jl_index]['chn'][3] = self.chn_anno[3]
-            json_save = open(json_save_name, 'w')
-            json_save.write(json.dumps(self.jl))
-            json_save.close()
-
-    def save_chn5(self):
-        global json_save_name
-        self.chn_anno[4] = self.chn_entry5.get()
-        if self.cur_jl_index >= 0:
-            self.jl[self.cur_jl_index]['chn'][4] = self.chn_anno[4]
-            json_save = open(json_save_name, 'w')
-            json_save.write(json.dumps(self.jl))
-            json_save.close()
     
+    def chn_save(self):
+        global json_save_name
+	self.chn_anno1.set(self.chn_entry1.get())
+	self.chn_anno2.set(self.chn_entry2.get())
+	self.chn_anno3.set(self.chn_entry3.get())
+	self.chn_anno4.set(self.chn_entry4.get())
+	self.chn_anno5.set(self.chn_entry5.get())
+        if self.cur_jl_index >= 0:
+            self.jl[self.cur_jl_index]['chn'][0] = self.chn_anno1.get()
+            self.jl[self.cur_jl_index]['chn'][1] = self.chn_anno2.get()
+            self.jl[self.cur_jl_index]['chn'][2] = self.chn_anno3.get()
+            self.jl[self.cur_jl_index]['chn'][3] = self.chn_anno4.get()
+            self.jl[self.cur_jl_index]['chn'][4] = self.chn_anno5.get()
+            json_save = open(json_save_name, 'w')
+            json_save.write(json.dumps(self.jl))
+            json_save.close()
+
     def last_img(self):
 	global picdir, jsondir
 	if self.cur_pl_index >=1:
@@ -272,6 +273,11 @@ class Anno():
                 self.origin_anno[2] = '3. ' + it['captions'][2]
                 self.origin_anno[3] = '4. ' + it['captions'][3]
                 self.origin_anno[4] = '5. ' + it['captions'][4]
+                self.chn_anno1.set(it['chn'][0])
+                self.chn_anno2.set(it['chn'][1])
+                self.chn_anno3.set(it['chn'][2])
+                self.chn_anno4.set(it['chn'][3])
+                self.chn_anno5.set(it['chn'][4])
                 self.cur_jl_index = index
                 break
         self.origin_label1['text'] = self.origin_anno[0]
@@ -280,11 +286,11 @@ class Anno():
         self.origin_label4['text'] = self.origin_anno[3]
         self.origin_label5['text'] = self.origin_anno[4]
 
-        self.chn_entry1.delete(0, END)
-        self.chn_entry2.delete(0, END)
-        self.chn_entry3.delete(0, END)
-        self.chn_entry4.delete(0, END)
-        self.chn_entry5.delete(0, END)
+        self.chn_entry1['textvariable'] = self.chn_anno1
+        self.chn_entry2['textvariable'] = self.chn_anno2
+        self.chn_entry3['textvariable'] = self.chn_anno3
+        self.chn_entry4['textvariable'] = self.chn_anno4
+        self.chn_entry5['textvariable'] = self.chn_anno5
 
     def next_img(self):
 	global picdir, jsondir
@@ -302,6 +308,11 @@ class Anno():
                 self.origin_anno[2] = '3. ' + it['captions'][2]
                 self.origin_anno[3] = '4. ' + it['captions'][3]
                 self.origin_anno[4] = '5. ' + it['captions'][4]
+                self.chn_anno1.set(it['chn'][0])
+                self.chn_anno2.set(it['chn'][1])
+                self.chn_anno3.set(it['chn'][2])
+                self.chn_anno4.set(it['chn'][3])
+                self.chn_anno5.set(it['chn'][4])
                 self.cur_jl_index = index
                 break
         self.origin_label1['text'] = self.origin_anno[0]
@@ -310,11 +321,11 @@ class Anno():
         self.origin_label4['text'] = self.origin_anno[3]
         self.origin_label5['text'] = self.origin_anno[4]
 
-        self.chn_entry1.delete(0, END)
-        self.chn_entry2.delete(0, END)
-        self.chn_entry3.delete(0, END)
-        self.chn_entry4.delete(0, END)
-        self.chn_entry5.delete(0, END)
+        self.chn_entry1['textvariable'] = self.chn_anno1
+        self.chn_entry2['textvariable'] = self.chn_anno2
+        self.chn_entry3['textvariable'] = self.chn_anno3
+        self.chn_entry4['textvariable'] = self.chn_anno4
+        self.chn_entry5['textvariable'] = self.chn_anno5
 
 def main():
     global picdir, jsondir
