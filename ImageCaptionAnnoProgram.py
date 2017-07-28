@@ -84,9 +84,12 @@ class Anno():
         self.getpiclist()
         for pic in self.pl:
             self.listbox.insert(END, pic)
-        self.jl = json.load(open(jsondir, 'r'))
-        for i, it in enumerate(self.jl):
-            self.jl[i]['chn'] = [' ',' ',' ',' ',' ']
+        if os.path.exists(json_save_name):
+            self.jl = json.load(open(json_save_name, 'r'))
+        else:
+            self.jl = json.load(open(jsondir, 'r'))
+            for i, it in enumerate(self.jl):
+                self.jl[i]['chn'] = [' ',' ',' ',' ',' ']
             
 
         self.cur_imgname = ''
