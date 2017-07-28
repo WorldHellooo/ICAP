@@ -2,6 +2,7 @@
 
 import os, os.path, sys
 from Tkinter import *
+from ttk import *
 from PIL import Image, ImageTk
 from tkFileDialog import *
 import json
@@ -17,31 +18,31 @@ class Selectpath():
         self.topframe = Frame(root, borderwidth=2, relief=GROOVE)
         self.topframe.pack(padx=2, pady=2)
 
-        self.piclabel = Label(self.topframe, text='Image Path:')
+        self.piclabel = Label(self.topframe, text='图片路径:')
         self.piclabel.grid(row=0, column=0, padx=4, pady=4)
 
         self.picdir_text = StringVar()
         self.picdir_text.set('')
-        self.picentry = Entry(self.topframe, textvariable=self.picdir_text)
+        self.picentry = Entry(self.topframe, textvariable=self.picdir_text, width=30)
         self.picentry.grid(row=0, column=1, columnspan=2, padx=4, pady=4)
 
-        self.picbutton = Button(self.topframe, text='Load', command=self.getpicdir)
+        self.picbutton = Button(self.topframe, text='浏览', command=self.getpicdir, width=6)
         self.picbutton.grid(row=0, column=3, padx=4, pady=4)
 
-        self.jsonlabel = Label(self.topframe, text='JSON Path:')
+        self.jsonlabel = Label(self.topframe, text='JSON路径:')
         self.jsonlabel.grid(row=1, column=0, padx=4, pady=4)
 
         self.jsondir_text = StringVar()
         self.jsondir_text.set('')
-        self.jsonentry = Entry(self.topframe, textvariable=self.jsondir_text)
+        self.jsonentry = Entry(self.topframe, textvariable=self.jsondir_text, width=30)
         self.jsonentry.grid(row=1, column=1, columnspan=2, padx=4, pady=4)
 
-        self.jsonbutton = Button(self.topframe, text='Load', command=self.getjsondir)
+        self.jsonbutton = Button(self.topframe, text='浏览', command=self.getjsondir, width=6)
         self.jsonbutton.grid(row=1, column=3, padx=4, pady=4)
 
-        self.enter = Button(self.topframe, text='OK', command=self.getdirs)
+        self.enter = Button(self.topframe, text='确定', command=self.getdirs, width=6)
         self.enter.grid(row=2, column=1, padx=4, pady=4)
-        self.cancel = Button(self.topframe, text='Cancel', command=root.quit)
+        self.cancel = Button(self.topframe, text='取消', command=root.quit, width=6)
         self.cancel.grid(row=2, column=2, padx=4, pady=4)
     
     # get the path of images through the Load button
@@ -74,7 +75,7 @@ class Selectpath():
             Anno(self.topframe)
         else:
             win = Toplevel(self.topframe)
-            Label(win, text="Path or file not exist!").pack()
+            Label(win, text="文件路径不存在!").pack()
 
 
 # The interface to annotate the images with Chinese sentences.
@@ -85,9 +86,9 @@ class Anno():
         
         # left frame: the list of images
         self.leftframe = Frame(self.anno, borderwidth=2, relief=GROOVE)
-	self.leftframe.grid(row=0, column=0, rowspan=3, padx=2, pady=2)
+    	self.leftframe.grid(row=0, column=0, rowspan=3, padx=2, pady=2)
         self.leftscrbar = Scrollbar(self.leftframe, orient=VERTICAL)
-        self.listbox = Listbox(self.leftframe, yscrollcommand=self.leftscrbar.set, width=30, height=50)
+        self.listbox = Listbox(self.leftframe, yscrollcommand=self.leftscrbar.set, width=30, height=45)
         self.listbox.pack(side=LEFT, fill=BOTH)
         self.leftscrbar.pack(side=LEFT, fill=Y)
         self.pl = []
@@ -106,7 +107,7 @@ class Anno():
             
 
         self.cur_imgname = ''
-        self.cur_jl_index = -1
+    	self.cur_jl_index = -1
 	self.cur_pl_index = 0
 
         self.leftscrbar.config(command=self.listbox.yview)
@@ -121,7 +122,7 @@ class Anno():
         # top right: EN annotations loading from json file
 	self.rightframe1 = Frame(self.anno, borderwidth=2, relief=GROOVE)
 	self.rightframe1.grid(row=0, column=2, padx=2, pady=2)
-        self.origin_anno = ['1. Please hit ENTER.              ', '2. Please hit ENTER.              ', '3. Please hit ENTER.              ', '4. Please hit ENTER.              ', '5. Please hit ENTER.              ']
+        self.origin_anno = ['1. 请在左侧列表选中文件后单击Enter键进行切换              ', '2. 请在左侧列表选中文件后单击Enter键进行切换              ', '3. 请在左侧列表选中文件后单击Enter键进行切换              ', '4. 请在左侧列表选中文件后单击Enter键进行切换              ', '5. 请在左侧列表选中文件后单击Enter键进行切换              ']
 
         self.origin_label1 = Label(self.rightframe1, text=self.origin_anno[0], wraplength=500, justify=LEFT)
         self.origin_label1.pack(side=TOP, anchor=W, padx=10, pady=8)
@@ -148,47 +149,37 @@ class Anno():
         self.chn_label1.grid(row=0, column=0, padx=10, pady=5)
 	self.chn_entry1 = Entry(self.rightframe2, width=50)
 	self.chn_entry1.grid(row=0, column=1, columnspan=4, padx=5, pady=5)
-#	self.chn_button1 = Button(self.rightframe2, text='Save', command=self.save_chn1)
-#	self.chn_button1.grid(row=0, column=5, padx=5, pady=5)
 
         self.chn_label2 = Label(self.rightframe2, text='2. ')
         self.chn_label2.grid(row=1, column=0, padx=10, pady=5)
-	self.chn_entry2 = Entry(self.rightframe2, width=50)
+    	self.chn_entry2 = Entry(self.rightframe2, width=50)
 	self.chn_entry2.grid(row=1, column=1, columnspan=4, padx=5, pady=5)
-#	self.chn_button2 = Button(self.rightframe2, text='Save', command=self.save_chn2)
-#	self.chn_button2.grid(row=1, column=5, padx=5, pady=5)
 
         self.chn_label3 = Label(self.rightframe2, text='3. ')
 	self.chn_label3.grid(row=2, column=0, padx=10, pady=5)
 	self.chn_entry3 = Entry(self.rightframe2, width=50)
 	self.chn_entry3.grid(row=2, column=1, columnspan=4, padx=5, pady=5)
-#	self.chn_button3 = Button(self.rightframe2, text='Save', command=self.save_chn3)
-#	self.chn_button3.grid(row=2, column=5, padx=5, pady=5)
 
         self.chn_label4 = Label(self.rightframe2, text='4. ')
 	self.chn_label4.grid(row=3, column=0, padx=10, pady=5)        
 	self.chn_entry4 = Entry(self.rightframe2, width=50)
         self.chn_entry4.grid(row=3, column=1, columnspan=4, padx=5, pady=5)
-#	self.chn_button4 = Button(self.rightframe2, text='Save', command=self.save_chn4)
-#	self.chn_button4.grid(row=3, column=5, padx=5, pady=5)
 
-	self.chn_label5 = Label(self.rightframe2, text='5. ')
+    	self.chn_label5 = Label(self.rightframe2, text='5. ')
 	self.chn_label5.grid(row=4, column=0, padx=10, pady=5)
 	self.chn_entry5 = Entry(self.rightframe2, width=50)
 	self.chn_entry5.grid(row=4, column=1, columnspan=4, padx=5, pady=5)
-#	self.chn_button5 = Button(self.rightframe2, text='Save', command=self.save_chn5)
-#	self.chn_button5.grid(row=4, column=5, padx=5, pady=5)
 
-        self.chn_save_button = Button(self.rightframe2, text='Save', command=self.chn_save, width=8, height=2)
+        self.chn_save_button = Button(self.rightframe2, text='保 存', command=self.chn_save, width=8)
         self.chn_save_button.grid(row=5, column=0,columnspan=5, padx=5, pady=5)
 
         
         # buttom right: buttons of Last and Next
         self.rightframe3 = Frame(self.anno, borderwidth=2, relief=GROOVE)
         self.rightframe3.grid(row=2, column=2, padx=2, pady=2)
-        self.lastbutton = Button(self.rightframe3, text='Last', command=self.last_img, width =10, height=3)
+        self.lastbutton = Button(self.rightframe3, text='上一个', command=self.last_img, width =10)
         self.lastbutton.grid(row=0, column=0, padx=10, pady=10)
-        self.nextbutton = Button(self.rightframe3, text='Next', command=self.next_img, width =10, height=3)
+        self.nextbutton = Button(self.rightframe3, text='下一个', command=self.next_img, width =10)
         self.nextbutton.grid(row=0, column=1, padx=10, pady=10)
 
         self.listbox.bind('<Return>', self.show_img_and_text)
@@ -330,7 +321,7 @@ class Anno():
 def main():
     global picdir, jsondir
     root = Tk()
-    root.title('Image Caption')
+    root.title('Image Caption中文数据集标注程序')
     root.resizable(0,0)
 
     sp = Selectpath(root)
@@ -339,3 +330,4 @@ def main():
     
 if __name__ == '__main__':
     main()
+
