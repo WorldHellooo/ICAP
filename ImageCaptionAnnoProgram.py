@@ -124,15 +124,15 @@ class Anno():
 	self.rightframe1.grid(row=0, column=2, padx=2, pady=2)
         self.origin_anno = ['1. 请在左侧列表选中文件后单击Enter键进行切换              ', '2. 请在左侧列表选中文件后单击Enter键进行切换              ', '3. 请在左侧列表选中文件后单击Enter键进行切换              ', '4. 请在左侧列表选中文件后单击Enter键进行切换              ', '5. 请在左侧列表选中文件后单击Enter键进行切换              ']
 
-        self.origin_label1 = Label(self.rightframe1, text=self.origin_anno[0], wraplength=500, justify=LEFT)
+        self.origin_label1 = Label(self.rightframe1, text=self.origin_anno[0], wraplength=500, justify=LEFT, font=("Times", 14, "bold"))
         self.origin_label1.pack(side=TOP, anchor=W, padx=10, pady=8)
-        self.origin_label2 = Label(self.rightframe1, text=self.origin_anno[1], wraplength=500, justify=LEFT)
+        self.origin_label2 = Label(self.rightframe1, text=self.origin_anno[1], wraplength=500, justify=LEFT, font=("Times", 14, "bold"))
         self.origin_label2.pack(side=TOP, anchor=W, padx=10, pady=8)
-        self.origin_label3 = Label(self.rightframe1, text=self.origin_anno[2], wraplength=500, justify=LEFT)
+        self.origin_label3 = Label(self.rightframe1, text=self.origin_anno[2], wraplength=500, justify=LEFT, font=("Times", 14, "bold"))
         self.origin_label3.pack(side=TOP, anchor=W, padx=10, pady=8)
-        self.origin_label4 = Label(self.rightframe1, text=self.origin_anno[3], wraplength=500, justify=LEFT)
+        self.origin_label4 = Label(self.rightframe1, text=self.origin_anno[3], wraplength=500, justify=LEFT, font=("Times", 14, "bold"))
         self.origin_label4.pack(side=TOP, anchor=W, padx=10, pady=8)
-        self.origin_label5 = Label(self.rightframe1, text=self.origin_anno[4], wraplength=500, justify=LEFT)
+        self.origin_label5 = Label(self.rightframe1, text=self.origin_anno[4], wraplength=500, justify=LEFT, font=("Times", 14, "bold"))
         self.origin_label5.pack(side=TOP, anchor=W, padx=10, pady=8)
         
         # middle right: entries to type Chinese sentences into
@@ -145,29 +145,29 @@ class Anno():
         self.chn_anno4 = StringVar()
         self.chn_anno5 = StringVar()
         
-        self.chn_label1 = Label(self.rightframe2, text='1. ')
+        self.chn_label1 = Label(self.rightframe2, text='1. ', font=("宋体", 12, "bold"))
         self.chn_label1.grid(row=0, column=0, padx=10, pady=5)
-	self.chn_entry1 = Entry(self.rightframe2, width=50)
+	self.chn_entry1 = Entry(self.rightframe2, width=50, font=("宋体", 12, "bold"))
 	self.chn_entry1.grid(row=0, column=1, columnspan=4, padx=5, pady=5)
 
-        self.chn_label2 = Label(self.rightframe2, text='2. ')
+        self.chn_label2 = Label(self.rightframe2, text='2. ', font=("宋体", 12, "bold"))
         self.chn_label2.grid(row=1, column=0, padx=10, pady=5)
-    	self.chn_entry2 = Entry(self.rightframe2, width=50)
+    	self.chn_entry2 = Entry(self.rightframe2, width=50, font=("宋体", 12, "bold"))
 	self.chn_entry2.grid(row=1, column=1, columnspan=4, padx=5, pady=5)
 
-        self.chn_label3 = Label(self.rightframe2, text='3. ')
+        self.chn_label3 = Label(self.rightframe2, text='3. ', font=("宋体", 12, "bold"))
 	self.chn_label3.grid(row=2, column=0, padx=10, pady=5)
-	self.chn_entry3 = Entry(self.rightframe2, width=50)
+	self.chn_entry3 = Entry(self.rightframe2, width=50, font=("宋体", 12, "bold"))
 	self.chn_entry3.grid(row=2, column=1, columnspan=4, padx=5, pady=5)
 
-        self.chn_label4 = Label(self.rightframe2, text='4. ')
+        self.chn_label4 = Label(self.rightframe2, text='4. ', font=("宋体", 12, "bold"))
 	self.chn_label4.grid(row=3, column=0, padx=10, pady=5)        
-	self.chn_entry4 = Entry(self.rightframe2, width=50)
+	self.chn_entry4 = Entry(self.rightframe2, width=50, font=("宋体", 12, "bold"))
         self.chn_entry4.grid(row=3, column=1, columnspan=4, padx=5, pady=5)
 
-    	self.chn_label5 = Label(self.rightframe2, text='5. ')
+    	self.chn_label5 = Label(self.rightframe2, text='5. ', font=("宋体", 12, "bold"))
 	self.chn_label5.grid(row=4, column=0, padx=10, pady=5)
-	self.chn_entry5 = Entry(self.rightframe2, width=50)
+	self.chn_entry5 = Entry(self.rightframe2, width=50, font=("宋体", 12, "bold"))
 	self.chn_entry5.grid(row=4, column=1, columnspan=4, padx=5, pady=5)
 
         self.chn_save_button = Button(self.rightframe2, text='保 存', command=self.chn_save, width=8)
